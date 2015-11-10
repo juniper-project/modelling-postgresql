@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Module id="${project.name}" class="org.modelio.juniper.ide.psqlmodeler.impl.PostgreSQLModelerModule" binaryversion="3.3.00.9023" version="${project.version}.${buildNumber}.9023" schema-level="2" uid="96851706-5920-46e5-8e3a-90a8cb9cc6b2">
+    <ClassPath>
+        <PathEntry path="lib/${project.artifactId}-${project.version}.jar"/>
+        <PathEntry path="lib/commons-lang3-3.1.jar"/>
+        <PathEntry path="lib/audit4modules-0.1.27.jar"/>
+        <PathEntry path="lib/junit-4.8.1.jar"/>
+    </ClassPath>
+    <Profiles>
+        <Profile uid="fd203931-6923-4caf-850d-39a13c1d5126" id="PostgreSQL deployment Profile">
+            <Stereotype name="Single" metaclass="BindableInstance" label="Single" uid="ca5d3383-5618-4ee6-910d-a33fb799b398">
+                <Icon path="res/icons/single_16.png"/>
+                <Image path="res/icons/single_32.png"/>
+            </Stereotype>
+            <Stereotype name="Master" metaclass="BindableInstance" label="Master" uid="6e9e4c85-3f5e-4d6f-b39f-7c17bc18d643">
+                <Icon path="res/icons/master_database.png"/>
+                <Image path="res/icons/master_32.png"/>
+            </Stereotype>
+            <Stereotype name="StandBy" metaclass="BindableInstance" label="StandBy" uid="42533556-0a03-4700-976e-73cbede950b0">
+                <Icon path="res/icons/slave_database.png"/>
+                <Image path="res/icons/standby_32.png"/>
+            </Stereotype>
+        </Profile>
+        <Profile uid="ec3d19e8-4612-4886-a86b-173059253a04" id="PostgreSQL data modelling Profile">
+            <Stereotype name="PsqlDatabase" metaclass="Package" label="Database" uid="78d8490d-3fe9-4efa-8ac8-ad8a7af810f9">
+                <Icon path="res/icons/database.png"/>
+                <Image path="res/icons/database_32.png"/>
+            </Stereotype>
+            <Stereotype name="Xml" metaclass="AssociationEnd" label="Xml" uid="2dcf2f61-310a-48f4-8fed-d28e89a73df4"/>
+            <Stereotype name="Json" metaclass="AssociationEnd" label="Json" uid="73f58bf9-bc83-4dd1-923d-c58c5dc6e10d"/>
+            <Stereotype name="Hstore" metaclass="AssociationEnd" label="Hstore" uid="affd8c63-d9c5-42a4-8d6b-f3175ac988f4"/>
+        </Profile>
+        <Profile uid="f04ea032-31a7-4b5d-99fc-ac446152c2d2" id="PostgreSQL architecture application">
+            <Stereotype name="PostgreSQLServer" metaclass="Class" label="PostgreSQLServer" uid="4d6e2871-a81a-410c-b893-495a4964abc9">
+                <Icon path="res/icons/postgresql_server.png"/>
+                <Image path="res/icons/postgres_server_48.png"/>
+                <TagTypes>
+                    <TagType name="user" uid="3c1eb6ac-bf5f-4998-a01a-0a4b6c386de9" label="user" is-hidden="false"/>
+                    <TagType name="password" uid="8089796d-e6ff-48fc-bbea-4757ad587cce" label="password" is-hidden="false"/>
+                </TagTypes>
+            </Stereotype>
+        </Profile>
+        <Profile uid="9ff6d551-e5ff-4ec3-8d8b-b0a0194caf2e" id="Diagrams">
+            <Stereotype name="PostgreSQLDataModelDiagram" metaclass="StaticDiagram" is-hidden="false" label="DataModelDiagram" uid="5286ba23-a86b-42f3-a91c-4281f8a22500">
+                <Icon path="res/icons/database_diagram_16.png"/>
+                <Image path="res/icons/database_diagram_32.png"/>
+            </Stereotype>
+        </Profile>
+    </Profiles>
+    <Gui>
+        <Commands>
+            <Command id="Create Storage program" label="Create Storage program" tooltip="true" image="res/icons/postgresql_server.png" group="Elements" modify-model="true" group-image="res/icons/elements16.png">
+                <Scope metaclass="Package" stereotype="SoftwareArchitectureModel"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.CreateStorageProgramCommand"/>
+            </Command>
+            <Command id="Create data model" label="Create data model" tooltip="true" image="res/icons/datamodel_16.png" group="Elements" modify-model="true" group-image="res/icons/elements16.png">
+                <Scope metaclass="Class" stereotype="PostgreSQLServer"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.CreateDataModelCommand"/>
+            </Command>
+            <Command id="Create PsqlDatabase" label="Create Database" tooltip="true" image="res/icons/database.png" group="Elements" modify-model="true" group-image="res/icons/elements16.png">
+                <Scope metaclass="Package"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.CreateDatabaseCommand"/>
+            </Command>
+            <Command id="Create PostgreSQL data diagram" label="Create PostgreSQL data diagram" tooltip="true" image="res/icons/database_diagram_16.png" group="Diagrams" modify-model="true" group-image="res/icons/diagrams_16.png">
+                <Scope metaclass="Package" stereotype="DataModel"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.CreatePsqlDataDiagramCommand"/>
+            </Command>
+            <Command id="Set relationship to XML" label="Set relationship to XML" tooltip="true" image="res/icons/add_16.png" group="Model transformations" modify-model="true" group-image="res/icons/transformation16.png">
+                <Scope metaclass="AssociationEnd"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.CreateXmlCommand"/>
+            </Command>
+            <Command id="Set relationship to Hstore" label="Set relationship to Hstore" tooltip="true" image="res/icons/add_16.png" group="Model transformations" modify-model="true" group-image="res/icons/transformation16.png">
+                <Scope metaclass="AssociationEnd"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.CreateHstoreCommand"/>
+            </Command>
+            <Command id="Set relationship to Json" label="Set relationship to Json" tooltip="true" image="res/icons/add_16.png" group="Model transformations" modify-model="true" group-image="res/icons/transformation16.png">
+                <Scope metaclass="AssociationEnd"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.CreateJsonCommand"/>
+            </Command>
+            <Command id="Generate single host deployment model" label="Generate single host deployment model" tooltip="true" image="res/icons/singledatabase_16.png" group="Model transformations" modify-model="true" group-image="res/icons/transformation16.png">
+                <Scope metaclass="Class" stereotype="PostgreSQLServer"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.GenerateSingleHostDeploymentCommand"/>
+            </Command>
+            <Command id="Generate replicated host deployment model" label="Generate replicated host deployment model" tooltip="true" image="res/icons/databases_16.png" group="Model transformations" modify-model="true" group-image="res/icons/transformation16.png">
+                <Scope metaclass="Class" stereotype="PostgreSQLServer"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.GenerateReplicatedHostDeploymentCommand"/>
+            </Command>
+            <Command id="Generate deployment scripts" label="Generate deployment scripts..." tooltip="true" image="res/icons/database-settings-icon.png" group="Code generators" modify-model="false" group-image="res/icons/gen_export_16.png">
+                <Scope metaclass="Package" stereotype="JUNIPERModel"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.GenerateDeploymentScriptCommand"/>
+            </Command>
+            <Command id="Generate Psqldatabase schema" label="Generate database schema..." tooltip="true" image="res/icons/composition_database_3.png" group="Code generators" modify-model="false" group-image="res/icons/gen_export_16.png">
+                <Scope metaclass="Package" stereotype="JUNIPERModel"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.GenerateSchemaInitializationScriptCommand"/>
+            </Command>
+            <Command id="Generate code" label="Generate code" tooltip="true" image="res/icons/generation.png" group="Code generators" modify-model="false" group-image="res/icons/gen_export_16.png">
+                <Scope metaclass="Package" stereotype="JUNIPERModel"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.GenerateCodeCommand"/>
+            </Command>
+            <Command id="Generate PostgreSQL data model" label="Generate PostgreSQL data model" tooltip="true" image="res/icons/generation.png" group="Data model generators" modify-model="true" group-image="res/icons/gen_export_16.png">
+                <Scope metaclass="Package" stereotype="DataModel"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.explorer.GeneratePSQLDataModelCommand"/>
+            </Command>
+        </Commands>
+        <Tools>
+            <Tool id="CreatePsqlDatabaseTool" label="Create Database" tooltip="Create Database" image="res/icons/database.png">
+                <Scope-source metaclass="Package" stereotype="DataModel"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.diagram.util.SimpleBoxTool">
+                    <HParameter name="metaclass" value="Package"/>
+                    <HParameter name="ownerStereotypeModule" value="PersistentProfile"/>
+                    <HParameter name="ownerStereotype" value="DataModel"/>
+                    <HParameter name="type" value="script"/>
+                    <HParameter name="path" value="/res/scripts/createDatabase.py"/>
+                </Handler>
+            </Tool>
+            <Tool id="CreateXmlCompositionTool" label="Create XML composition" tooltip="Create XML composition" image="res/icons/xml_compo_16.png">
+                <Scope-source metaclass="Class" stereotype="Entity"/>
+                <Scope-target metaclass="Class" stereotype="Entity"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.diagram.util.SimpleLinkTool">
+                    <HParameter name="metaclass" value="AssociationEnd"/>
+                    <HParameter name="type" value="script"/>
+                    <HParameter name="scriptPath" value="/res/scripts/createXmlCompositionTool.py"/>
+                </Handler>
+            </Tool>
+            <Tool id="CreateHstoreCompositionTool" label="Create Hstore composition" tooltip="Create Hstore composition" image="res/icons/hstore_compo_16.png">
+                <Scope-source metaclass="Class" stereotype="Entity"/>
+                <Scope-target metaclass="Class" stereotype="Entity"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.diagram.util.SimpleLinkTool">
+                    <HParameter name="metaclass" value="AssociationEnd"/>
+                    <HParameter name="type" value="script"/>
+                    <HParameter name="scriptPath" value="/res/scripts/createHstoreCompositionTool.py"/>
+                </Handler>
+            </Tool>
+            <Tool id="CreateJsonCompositionTool" label="Create Json composition" tooltip="Create Json composition" image="res/icons/json_compo_16.png">
+                <Scope-source metaclass="Class"/>
+                <Scope-target metaclass="Class"/>
+                <Handler class="org.modelio.juniper.ide.psqlmodeler.command.diagram.util.SimpleLinkTool">
+                    <HParameter name="metaclass" value="AssociationEnd"/>
+                    <HParameter name="type" value="script"/>
+                    <HParameter name="scriptPath" value="/res/scripts/createJsonCompositionTool.py"/>
+                </Handler>
+            </Tool>
+        </Tools>
+        <ContextualMenu>
+            <CommandRef refid="Create Storage program"/>
+            <CommandRef refid="Create data model"/>
+            <CommandRef refid="Create PsqlDatabase"/>
+            <CommandRef refid="Create PostgreSQL data diagram"/>
+            <CommandRef refid="Set relationship to XML"/>
+            <CommandRef refid="Set relationship to Hstore"/>
+            <CommandRef refid="Set relationship to Json"/>
+            <CommandRef refid="Generate single host deployment model"/>
+            <CommandRef refid="Generate replicated host deployment model"/>
+            <CommandRef refid="Generate deployment scripts"/>
+            <CommandRef refid="Generate Psqldatabase schema"/>
+            <CommandRef refid="Generate code"/>
+            <CommandRef refid="Generate PostgreSQL data model"/>
+        </ContextualMenu>
+        <Diagrams>
+            <DiagramType base-diagram="StaticDiagram" stereotype="PostgreSQLDataModelDiagram">
+                <Palette keepBasePalette="true">
+                    <ToolRef refid="CreatePsqlDatabaseTool" group="Noeuds"/>
+                    <ToolRef refid="EntityDiagramCommande" group="Noeuds"/>
+                    <ToolRef refid="IdentifierDiagramCommande" group="Elements"/>
+                    <ToolRef refid="PersistentAttributeDiagramCommande" group="Elements"/>
+                    <ToolRef refid="CREATE_ATTRIBUTE" group="Elements"/>
+                    <ToolRef refid="CREATE_ASSOCIATION" group="Links"/>
+                    <ToolRef refid="CreateXmlCompositionTool" group="Links"/>
+                    <ToolRef refid="CreateHstoreCompositionTool" group="Links"/>
+                    <ToolRef refid="CreateJsonCompositionTool" group="Links"/>
+                </Palette>
+                <Handler class="StandardCustomizer"/>
+            </DiagramType>
+        </Diagrams>
+        <Views/>
+    </Gui>
+    <Dependencies>
+        <Required name="JuniperIDE" version="0.2.194.9023"/>
+    </Dependencies>
+</Module>

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- definition -->
+	<groupId>org.modelio.juniper</groupId>
+	<artifactId>PostgreSQLModeler</artifactId>
+	<version>0.2</version>
+
+	<name>PostgreSQLModeler</name>
+
+	<!-- Dummy SCM for generating build numbers http://stackoverflow.com/questions/9115765/is-it-possible-to-use-maven-buildnumber-plugin-to-generate-build-number-without -->
+	<scm>
+		<connection>scm:svn:http://127.0.0.1/dummy</connection>
+		<developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
+		<tag>HEAD</tag>
+		<url>http://127.0.0.1/dummy</url>
+	</scm>
+	<!-- repositories -->
+	<repositories>
+		<repository>
+			<id>modelio</id>
+			<url>http://repository.modelio.org</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>modelio</id>
+			<url>http://repository.modelio.org</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<!-- properties -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<!-- api modelio -->
+		<dependency>
+			<groupId>org.modelio</groupId>
+			<artifactId>MDAKit</artifactId>
+			<version>[3.3.0,)</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Library inclusion example -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.modelio.audit</groupId>
+			<artifactId>audit4modules</artifactId>
+			<version>0.1.27</version>
+		</dependency>
+		
+		<!-- Tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<!-- <systemPath>C:\Users\malmeida\.m2\repository\junit\junit\4.10\junit-4.10.jar</systemPath> 
+				<scope>system</scope> -->
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+		
+	<!-- // Build // -->
+	<build>
+		<plugins>
+			<!-- Use JVM 1.8 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.modelio</groupId>
+				<artifactId>modelio-maven-plugin</artifactId>
+				<version>3.3.0.04</version>
+				<executions>
+					<execution>
+						<id>ModuleValidation</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>module-validation</goal>
+						</goals>
+						<configuration>
+							<version>0.0.0</version> <!-- Version numbers are generated automatically, no need to validate them 
+								with the validator -->
+						</configuration>
+					</execution>
+					<execution>
+						<id>ResourceManagement</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>module-configuration</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<moduleFile>${project.basedir}/src/main/conf/module.xml</moduleFile>
+				</configuration>
+			</plugin>
+
+			<!-- Copy maven dependencies -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<outputDirectory>${project.basedir}/target/lib</outputDirectory>
+					<overWriteReleases>false</overWriteReleases>
+					<overWriteSnapshots>false</overWriteSnapshots>
+					<overWriteIfNewer>true</overWriteIfNewer>
+					<excludeScope>provided</excludeScope>
+				</configuration>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Build zip -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+					<finalName>${project.name}_${project.version}.${buildNumber}</finalName>
+					<attach>false</attach>
+					<appendAssemblyId>false</appendAssemblyId>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Rename zip into jmdac -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>rename</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<move
+									file="${project.basedir}/target/${project.name}_${project.version}.${buildNumber}.zip"
+									tofile="${project.basedir}/target/${project.name}_${project.version}.${buildNumber}.jmdac" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- Auto increments version number -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>buildnumber</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+					<format>{0,number,00}</format>
+					<items>
+						<item>buildNumber</item>
+					</items>
+					<revisionOnScmFailure>unknownbuild</revisionOnScmFailure>
+				</configuration>
+			</plugin>
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<!-- ignore plugin goal -> tells m2e to silently ignore the plugin execution. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>copy-dependencies</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.modelio</groupId>
+										<artifactId>
+											modelio-maven-plugin
+										</artifactId>
+										<versionRange>
+											[3.3.0.04,)
+										</versionRange>
+										<goals>
+											<goal>
+												module-configuration
+											</goal>
+											<goal>
+												module-validation
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>
+
